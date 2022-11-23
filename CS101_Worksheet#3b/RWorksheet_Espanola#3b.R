@@ -1,0 +1,79 @@
+#Española,Jacklord BSIT 2-A
+#Worksheet-3b in R
+
+
+#1. Create a data frame using the table below.
+#| a. Write the codes.
+studentsData <- data.frame(
+  Respondents = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20), 
+  Sex = c(2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2),
+  Fathers_Occupation = c(1, 3, 3, 3, 1, 2, 3, 1, 1, 1, 3, 2, 1, 3, 3, 1, 3, 1, 2, 1),
+  Persons_at_Home = c(5, 7, 3, 8, 5, 9, 6, 7, 8, 4, 7, 5, 4, 7, 8, 8, 3,  11, 7, 6),
+  Siblings_at_School = c(6, 4, 4, 1, 2, 1, 5, 3, 1, 2, 3, 2, 5, 5, 2, 1, 2, 5, 3, 2),
+  Types_of_Houses = c(1, 2, 3, 1, 1, 3, 3, 1, 2, 3, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2)
+  )
+studentsData
+
+
+#b. Describe the data. Get the structure or the summary of the data
+#The data shows 20 data rows each columns consisting respondents, sex, father occupation,
+#persons at home, siblings at home, and type of houses. 
+summary(studentsData)
+
+#c. Is the mean number of siblings attending is 5?
+mean(studentsData$Siblings_at_School) #Answer: No
+
+#d. Extract the 1st two rows and then all the columns using the subsetting functions.
+#Write the codes and its output.
+studData1 <- subset(studentsData[1:2, 1:6, drop = FALSE])
+studData1
+
+#e. Extract 3rd and 5th row with 2nd and 4th column. Write the codes and its
+#result.
+studData2 <- subset(studentsData[c(3,5), c(2,4)])
+studData2
+
+#f. Select the variable types of houses then store the vector that results as types_houses.
+#Write the codes.
+types_houses <- subset(studentsData[1:20, 6, drop = FALSE])
+types_houses
+
+#g. Select only all Males respondent that their father occupation was farmer. Write
+#the codes and its output.
+studData3 <- subset(studentsData[c(1:20), c(2,3)])
+boys <- studData3[studentsData$Fathers_Occupation == '1' & studentsData$Sex == '1',]
+boys
+
+#h. Select only all females respondent that have greater than or equal to 5 number
+#of siblings attending school. Write the codes and its outputs.
+studData4 <- subset(studentsData[c(1:20), c(2,5)])
+girls <- studData4[studentsData$Sex =='2' & studentsData$Siblings_at_School >= '5',]
+girls
+
+#2. Write a R program to create an empty data frame. Using the following codes:
+df = data.frame(Ints=integer(),
+                Doubles=double(), Characters=character(),
+                Logicals=logical(),
+                Factors=factor(),
+                stringsAsFactors=FALSE)
+print("Structure of the empty dataframe:")
+print(str(df))
+
+#a. Describe the results
+#Answer: The result of the empty data frame displays only the column names and its column data type
+#without rows or there are no available data in the table. The column data types were checked in the results by adding "str" in the "print" 
+#command  when displaying the output of the data frame. Adding  parameter, stringsAsFactors=FALSE, 
+#the columns in factor data type was changed to character data type.  
+
+#3. Interpret the graph.
+#Answer: The graph shows the number of sentiments of tweets per day. Based on the graph, the negative sentiments 
+#has the highest tweets from day July 14, 2022 up until July 21, 2022. On the other, positive sentiments 
+#rank second while the neutral sentiments has the lowest tweets on the same days of tweets.   
+
+
+
+
+
+
+
+
