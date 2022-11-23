@@ -1,0 +1,82 @@
+#ESPANOLA JACKLORD BSIT 2-A
+#Worksheet-4 in R
+
+#1. The table below shows the data about shoe size and height. Create a data frame.
+
+data <- data.frame(
+  shoesize = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 10.5,
+               13.0, 11.5, 8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5, 10.5, 11.0, 9.0, 10.0),
+  height = c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0, 72.0, 64.0, 74.5, 67.0, 71.0, 71.0,
+             77.0, 72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0, 72.0, 70.0, 69.0, 70.0),
+  gender = c("F", "F", "F", "F", "M", "F", "F", "F", "M", "F", "M", "F", "M", "M", "M", "M", "F", 
+             "F", "M", "F", "F", "M", "M", "F", "M", "M", "M", "M")
+  )
+
+data
+
+#a. Describe the data
+#The data shows a 3 column data consists of the shoe size, gender and height and it has 28 rows of
+
+#b. Find the mean of shoe size and height of the respondents.
+#Copy the codes and results.
+
+#Male
+boy1 <- subset(data, gender == 'M')
+mean(boy1$shoesize)
+
+boy2 <- subset(data, gender = 'M')
+mean(boy2$height)
+
+#Female
+girl1 <- subset(data, gender = 'F')
+mean(girl1$shoesize)
+
+girl2 <- subset(data, gender = 'F')
+mean(girl2$height)
+
+#c. Is there a relationship between shoe size and height? Why?
+#Answer: Yes, because the higher the height, the greater will be its shoe size.
+
+#2. Construct character vector months to a factor with factor() and assign the result to
+#factor_months_vector. Print out factor_months_vector and assert that R prints out
+#the factor levels below the actual values.
+#Consider data consisting of the names of months:
+
+ months_vector <- c("March","April","January","November","January",
+                               "September","October","September","November","August",
+                               "January","November","November","February","May","August",
+                               "July","December","August","August","September","November","February","April") 
+ months_vector
+factor_months_vector <- factor(months_vector)
+factor_months_vector
+
+#3. Then check the summary() of the months_vector and factor_months_vector. |
+#Interpret the results of both vectors. Are they both equally useful in this case?
+
+summary(months_vector)
+summary(factor_months_vector)
+#The results of the summary  both shows the length of the data. However in factor_months_vector
+#the length of the data displays it separately in each month. While in months_vector displays
+#the length altogether, and it also displays the type of class and mode of the data while factor_months_vector
+#dont have. However, they are both useful in this case.
+
+#4. Create a vector and factor for the table below
+factor_data <- data.frame(
+  Direction = c("East", "West", "North"),
+  Frequency = c(1, 4, 3)
+)
+factor_data
+new_order_data <- factor(factor_data,levels = c("East","West","North"))
+new_order_data
+
+#5. Enter the data below in Excel with file name = import_march.csv
+
+#a. Import the excel file into the Environment Pane using read.table() function.
+#Write the code.
+library(readxl)
+import_march <- read.csv("import_march.csv")
+View(import_march)
+
+#b. View the dataset. Write the code and its result.
+View(import_march)
+import_march
