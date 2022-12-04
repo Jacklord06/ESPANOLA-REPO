@@ -1,0 +1,143 @@
+#Espanola, Jacklord BSIT 2-A
+#Individual Project #1
+
+
+#Packages that will be needed 
+library(twitteR)
+library(tm)
+library(dplyr)
+library(plotly)
+library(ggplot2)
+library(RColorBrewer)
+library(tidytext)
+library(stringr)
+library(tidyr)
+library(magrittr)
+library(corpus)
+library(rtweet)
+library(slam)
+library(wordcloud)
+library(wordcloud2)
+
+
+#1. Extract from twitter using your developer's credentials. Choose any keyword you want. 
+
+#place your own token key and secret
+# set the credentials
+CONSUMER_SECRET <- "8LvRHk6qo04uwR5MD3LiBFQjKkntdScxp965Ig8cUGDHfrYskw"
+CONSUMER_KEY <- "i9BRjoSEXukdBdAVhQi6tistg"
+ACCESS_SECRET <- "HyHUdA1S9nVoncvWwokPAwNPf6isQOTStXj7exKE0vYX9"
+ACCESS_TOKEN <- "1595426639126880257-eqts7cMokyHWn8A59Wj3B9pJzzQEmO"
+
+# connect to twitter app
+setup_twitter_oauth(consumer_key = CONSUMER_KEY,
+                    consumer_secret = CONSUMER_SECRET,
+                    access_token = ACCESS_TOKEN,
+                    access_secret = ACCESS_SECRET)
+
+
+#2. Get 10000 observations "excluding retweets.
+tweeeToday <- searchTwitter("SB19, -filter:retweets", 
+                        n = 10000,
+                        lang = 'en',
+                        since = "2022-11-21",
+                        until = "2022-11-30",
+                        retryOnRateLimit = 120)
+tweeeToday
+
+#Converting data into dataframe
+tweetS <- twListToDF(tweeToday)
+tweetS
+
+#Saving the data into a file
+save("tweetS", file = "tweetS.Rdata")
+load("tweetS.Rdata")
+
+
+#3. Plot the time series from the date created. with legends.
+ggplot(data = tweetS, aes(x = created)) +
+  geom_histogram(aes(fill = ..count..)) +
+  theme(legend.position = "none") +
+  xlab("Time") + ylab("Number of tweets") +
+  
+  scale_fill_gradient(low = "midnight blue", high = "aquamarine4")
+
+G(tweetS, "hours") +
+  labs(x = NULL, Y = NULL, 
+       title = "The Time Series of SB19",
+       subtitle = paste0(format(min(tweetS$created), "%d %B %Y"), " to ",
+                         format(max(tweets$created), "%d %B %Y")),
+       caption = "Data collected from Twitter via twitteR") +
+  theme_minimal()
+
+
+#4. Plot a graph (any graph you want)  based on the type of device - found in Source
+#- that the user use. Include the legends.
+encodeSource <- function(x) {
+  if(grepl(">Twitter for iPhone</a>", x)){
+    "iphone"
+  }else if(grepl(">Twitter for iPad</a>", x)){
+    "ipad"
+  }else if(grepl(">Twitter for Android</a>", x)){
+    "android"
+  } else if(grepl(">Twitter Web Client</a>", x)){
+    "Web"
+  } else if(grepl(">Twitter for Windows Phone</a>", x)){
+    "windows phone"
+  }else if(grepl(">dlvr.it</a>", x)){
+    "dlvr.it"
+  }else if(grepl(">IFTTT</a>", x)){
+    "ifttt"
+  }else if(grepl(">Facebook</a>", x)){  #This looks unreliable...
+    "facebook"
+  }else {
+    "others"
+  }
+}
+
+tweetsDF$tweetSource = sapply(tweetsDF$statusSource, 
+                              encodeSource)
+
+tweet_appSource <- tweetsDF %>% 
+  select(tweetSource) %>%
+  group_by(tweetSource) %>%
+  summarize(count=n()) %>%
+  arrange(desc(count)) 
+
+Source_subset <- subset(tweet_appSource,count >10)
+
+dataDF <- data.frame(
+  category = tweet_appSource$tweetSource,
+  count = tweet_appSource$count
+)
+
+dataDF$fraction = dataDF$count / sum(dataDF$count)
+dataDF$percentage = dataDF$count / sum(dataDF$count) * 100
+dataDF$ymax = cumsum(dataDF$fraction)
+dataDF$ymin = c(0, head(dataDF$ymax, n=-1))
+dataDF$roundP = round(dataDF$percentage, digits = 2)
+
+
+#5. Create a wordcloud from the screenName
+#Using wordcloud() package but using a shape pentagon 
+tweet_appScreen <- tweetsDF %>%
+  select(screenName) %>%
+  group_by(screenName) %>%
+  summarize(count=n()) %>%
+  arrange(desc(count)) 
+
+#convert to Corpus
+namesCorpus <- Corpus(VectorSource(tweetsDF$screenName))
+
+#Running the code using the wordcloud()
+wordcloud2(data=tweet_appScreen, 
+           size=0.8, 
+           color='random-light',
+           shape = 'pentagon')
+
+       
+
+
+
+
+  
